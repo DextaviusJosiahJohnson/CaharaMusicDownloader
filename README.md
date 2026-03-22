@@ -1,6 +1,6 @@
 # CMD — Cahara Music Downloader
 
-A minimal Electron desktop app for downloading YouTube audio and playlists as high-quality MP3s, with first-class Winamp playlist support. Built for Windows with a terminal aesthetic.
+A minimal Electron desktop app for downloading YouTube audio and playlists as high-quality MP3s, with first-class  Legacy playlist support. Built for Windows.
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![License](https://img.shields.io/badge/license-MIT-orange)
@@ -78,8 +78,8 @@ On Windows you can also double-click **`build.bat`**.
 
 Each playlist gets its own named subfolder (`Output Dir / Playlist Name /`). Inside, alongside the MP3 files, you'll find:
 
-- **`playlist.m3u`** — standard playlist file; works in Winamp, VLC, foobar2000, Windows Media Player
-- **`playlist.html`** — drag this onto Winamp to import the full playlist automatically; also opens in any browser as a visual track listing
+- **`playlist.m3u`** — standard playlist file; works in , VLC, foobar2000, Windows Media Player
+- **`playlist.html`** — drag this onto  to import the full playlist automatically; also opens in any browser as a visual track listing
 
 ---
 
