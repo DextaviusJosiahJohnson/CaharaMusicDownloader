@@ -37,7 +37,7 @@ CMD will check for these on first launch and tell you if anything is missing.
 
 ## Download
 
-Grab the latest `CMD-x.x.x-portable.exe` from [Releases](../../releases). Run it directly — no installer required.
+Grab the latest `CaharaMD.exe` from [Releases](../../releases). Run it directly — no installer required.
 
 ---
 
