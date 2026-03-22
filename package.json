@@ -1,0 +1,55 @@
+{
+  "name": "cmd-cahara-music-downloader",
+  "version": "1.0.0",
+  "description": "Cahara Music Downloader — tactical YouTube archival tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev":   "electron . --dev",
+    "build": "electron-builder --win portable",
+    "build:installer": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  },
+  "devDependencies": {
+    "electron": "^29.1.0",
+    "electron-builder": "^24.13.3"
+  },
+  "keywords": ["music", "downloader", "youtube", "yt-dlp"],
+  "author": "Cahara",
+  "license": "MIT",
+  "build": {
+    "appId": "com.cahara.cmd",
+    "productName": "CMD",
+    "copyright": "Copyright © 2025 Cahara",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "icon": "assets/kona.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "CMD-${version}-portable.exe"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "CMD-${version}-setup.exe",
+      "shortcutName": "CMD"
+    }
+  }
+}

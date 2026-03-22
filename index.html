@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self'" />
+  <title>CMD — Cahara Music Downloader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+
+<!-- ── Dependency Check Overlay ─────────────────────────────────────────── -->
+<div id="dep-overlay" class="overlay hidden">
+  <div class="dep-box">
+    <div class="dep-header">
+      <span class="logo-text">CMD</span>
+      <span class="dep-title">// SYSTEM DEPENDENCY CHECK</span>
+    </div>
+    <div id="dep-list" class="dep-list">
+      <div class="dep-item checking" id="dep-ytdlp">
+        <span class="dep-name">yt-dlp</span>
+        <span class="dep-status">CHECKING...</span>
+        <span class="dep-version"></span>
+      </div>
+      <div class="dep-item checking" id="dep-ffmpeg">
+        <span class="dep-name">FFmpeg</span>
+        <span class="dep-status">CHECKING...</span>
+        <span class="dep-version"></span>
+      </div>
+      <div class="dep-item checking" id="dep-python">
+        <span class="dep-name">Python 3</span>
+        <span class="dep-status">CHECKING...</span>
+        <span class="dep-version"></span>
+      </div>
+    </div>
+    <div class="dep-note">
+      <p>YouTube downloads require <strong>yt-dlp</strong> + <strong>FFmpeg</strong> in PATH.</p>
+      <p>Install missing tools via: <code>pip install yt-dlp</code></p>
+    </div>
+    <button id="dep-proceed" class="btn-primary" disabled>PROCEED TO CMD</button>
+  </div>
+</div>
+
+<!-- ── Settings Drawer ───────────────────────────────────────────────────── -->
+<div id="settings-overlay" class="overlay hidden">
+  <div id="settings-drawer" class="settings-drawer">
+    <div class="settings-header">
+      <span class="settings-title">// SETTINGS</span>
+      <button id="settings-close-btn" class="btn-icon">✕</button>
+    </div>
+
+    <div class="settings-group">
+      <label class="settings-label">AUDIO FORMAT</label>
+      <select id="setting-format" class="settings-select">
+        <option value="mp3">MP3</option>
+        <option value="flac">FLAC</option>
+        <option value="aac">AAC</option>
+        <option value="m4a">M4A</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label class="settings-label">AUDIO QUALITY (YouTube)</label>
+      <select id="setting-quality" class="settings-select">
+        <option value="0">Best available</option>
+        <option value="128">128 kbps</option>
+        <option value="192">192 kbps</option>
+        <option value="320">320 kbps</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label class="settings-label">YOUTUBE OUTPUT DIR (optional override)</label>
+      <div class="dir-row">
+        <span id="setting-yt-dir" class="dir-display muted">Same as global</span>
+        <button id="btn-pick-yt-dir" class="btn-sm">BROWSE</button>
+        <button id="btn-clear-yt-dir" class="btn-icon" title="Clear override">✕</button>
+      </div>
+    </div>
+
+    <div class="settings-footer">
+      <span class="muted">CMD v1.0.0 — Cahara Music Downloader</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main App ──────────────────────────────────────────────────────────── -->
+<div id="app">
+
+  <!-- Top Bar -->
+  <header class="top-bar" id="drag-region">
+    <div class="top-left">
+      <span class="logo-text">CMD</span>
+      <span class="logo-sub">// CAHARA MUSIC DOWNLOADER</span>
+    </div>
+    <div class="top-right">
+      <span id="status-indicator" class="status-indicator ready">● READY</span>
+      <span class="version">v1.0.0</span>
+      <button id="btn-settings" class="btn-icon" title="Settings">⚙</button>
+      <button id="btn-depcheck" class="btn-icon" title="Dependency Check">⬡</button>
+      <button id="btn-minimize" class="btn-icon win-ctrl">─</button>
+      <button id="btn-maximize" class="btn-icon win-ctrl">□</button>
+      <button id="btn-close"    class="btn-icon win-ctrl danger">✕</button>
+    </div>
+  </header>
+  <div class="top-bar-line"></div>
+
+  <!-- Input Zone -->
+  <section class="input-zone">
+    <div class="url-row">
+      <input
+        id="url-input"
+        class="url-input"
+        type="text"
+        placeholder="PASTE LINK HERE_"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+
+    <div id="url-badge" class="url-badge hidden"></div>
+
+    <button id="download-btn" class="btn-primary btn-download">
+      ▶ INITIATE DOWNLOAD
+    </button>
+
+    <button id="cancel-btn" class="btn-secondary btn-download hidden">
+      ■ CANCEL
+    </button>
+  </section>
+
+  <!-- Output Dir Strip -->
+  <section class="dir-strip">
+    <div class="dir-left">
+      <span class="dir-label">OUTPUT DIR</span>
+      <span id="dir-path" class="dir-path muted" title="">Not set</span>
+    </div>
+    <div class="dir-right">
+      <button id="btn-browse-dir" class="btn-sm">BROWSE</button>
+      <button id="btn-open-dir"   class="btn-icon" title="Open in Explorer">📂</button>
+    </div>
+  </section>
+
+  <!-- Operations Log -->
+  <section class="log-section">
+    <div class="log-header">
+      <span class="log-title">// OPERATIONS LOG</span>
+      <div class="log-controls">
+        <span id="log-count" class="muted">0 entries</span>
+        <button id="btn-clear-log" class="btn-sm">CLEAR</button>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="progress-bar-wrap" class="progress-wrap hidden">
+      <div id="progress-bar" class="progress-bar"></div>
+      <span id="progress-label" class="progress-label">0%</span>
+    </div>
+
+    <div id="log-panel" class="log-panel"></div>
+  </section>
+
+</div>
+
+<script src="src/renderer.js"></script>
+</body>
+</html>
